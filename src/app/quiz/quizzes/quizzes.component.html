@@ -1,0 +1,43 @@
+<div class="container">
+  <div class="row mb-5">
+    <div class="offset-lg-4 col-lg-4 offset-md-4 col-md-4 offset-sm-4 col-sm-4 text-center">
+      <button (click)="openAddQuizzModal()" class="btn btn-primary mt-2">
+        Add new quiz
+      </button>
+      <div>Number of saved questions: {{ savedQuestions.length }}</div>
+    </div>
+  </div>
+  <div class="row">
+    <div
+      *ngFor="let quiz of quizzes; index as i"
+      class="col-lg-6 col-md-6 col-sm-12"
+    >
+      <div (click)="openEditQuizModal(quiz)" class="quiz-list card mb-5">
+        <div class="card-body">
+          <h5 class="card-title">{{ quiz.name }}</h5>
+          <p class="card-text">
+            Number of questions: {{ quiz.questions.length }}
+          </p>
+          <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+              <button
+                class="btn btn-warning mt-2"
+                (click)="startQuiz(quiz.id); $event.stopPropagation()"
+              >
+                Start quiz
+              </button>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+              <button
+                class="btn btn-danger mt-2"
+                (click)="deleteQuiz(quiz, i); $event.stopPropagation()"
+              >
+                Delete quiz
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

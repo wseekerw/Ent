@@ -1,0 +1,74 @@
+<button
+  (click)="backToQuizzes()"
+  role="button"
+  class="btn btn-warning quizzes-back"
+>
+  Back to quizzes
+</button>
+<form [formGroup]="myForm">
+  <carousel [isAnimated]="true" [noWrap]="true" [interval]="0">
+    <div formArrayName="submittedAnswers">
+      <slide *ngFor="let question of questionsForSolving; let i = index">
+
+        <div class="slide" *ngIf="!question.lastSlide">
+            <div class="center">
+              <p class="text text-center">{{ question.question }}</p>
+
+              <span class="text">Answer: </span>
+              <input formControlName="{{ i }}" class="form-control" (keydown.space)="$event.stopPropagation()" />
+              <div class="text-danger" *ngIf="submittedAnswers.controls[i].touched && submittedAnswers.controls[i].errors">
+                Please provide an answer
+              </div>
+
+              <div class="text-center">
+                <button
+                  [disabled]="submittedAnswers.controls[i].status === 'INVALID' || question.answered"
+                  class="btn btn-primary mt-2"
+                  (click)="submitAnswer(question, i)"
+                >
+                  Submit answer
+                </button>
+              </div>
+              <div class="text-center text text-correct" *ngIf="question.correct">Congratulations your answer is correct!</div>
+              <div class="text-center text text-correct" *ngIf="!question.correct && question.answered">
+                <p class="text-not-correct">Answer is not correct!</p>
+                <button class="btn btn-primary" (click)="showAnswer(question)">Show answer</button>
+                <div *ngIf="question.showAnswer">
+                    <p>{{ question.answer }}</p>
+                </div>
+              </div>
+              
+            </div>
+          
+        </div>
+        <div *ngIf="question.lastSlide" class="slide">
+          <div class="center">
+
+            <p class="text text-center last-page-text">Questions answered: {{questionsAnswered}} / {{questionsLength}}</p>
+            <p class="text text-center last-page-text">Questions correct: {{questionsCorrect}} / {{questionsLength}}</p>
+
+            <div class="text-center" *ngIf="questionsAnswered === questionsLength">
+
+              <p class="last-page-text text-correct">
+                Congratulations you have finished the {{quizzForSolving.name}} quizz
+              </p>
+
+              <button (click)="backToQuizzes()" class="btn btn-warning">End quizz</button>
+            </div>
+
+            <div *ngIf="questionsAnswered < questionsLength">
+
+              <p class="text-center last-page-text text-warning">
+                You have not finished the quizz. You still have {{questionsLength - questionsAnswered}} questions to answer.
+              </p>
+            </div>
+          </div>
+        
+        </div>
+      </slide>     
+      
+    </div>
+  </carousel>
+</form>
+
+

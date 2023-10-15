@@ -6,9 +6,19 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-## Code scaffolding
+## Get the application from repository
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+git init
+
+git remote add origin https://github.com/wseekerw/Ent
+
+git fetch --all
+
+git pull origin main
+
+or
+
+git clone https://github.com/wseekerw/Ent
 
 ## Build
 

@@ -1,0 +1,146 @@
+<form [formGroup]="quizForm" (submit)="submitQuiz()">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        <button
+          type="button"
+          class="btn float-end"
+          aria-label="Close"
+          (click)="bsModalRef.hide()"
+        >
+          <h3>&times;</h3>
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary mb-4 mt-3"
+          (click)="addQuestion()"
+        >
+          Add a question
+        </button>
+      </div>
+
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        <label for="question">Reuse a previously saved question:</label>
+        <ng-select formControlName="preSavedQuestion"
+                  [items]="previouslySavedQuestions"
+                  [multiple]="false"
+                  [closeOnSelect]="true"
+                  [clearable]="false"
+                  (change)="selectPreSavedQuestion()"
+                  [searchable]="true"
+                  placeholder="Select a question"
+                  bindLabel="question"
+                  bindValue="id"
+                  labelForId="question"
+                  #select>
+        <ng-template ng-option-tmp
+                      let-item="item"
+                      let-item$="item$"
+                      let-index="index">
+            
+            <span>{{item.question}}</span>
+          </ng-template>
+          <ng-template ng-header-tmp>
+              <input class="form-control"
+                      type="text"
+                      placeholder="Search"
+                      (input)="select.filter($any($event.target).value)"/>
+          </ng-template>
+      </ng-select>
+
+          <button type="button"
+              class="btn btn-primary mb-4 mt-3"
+              [disabled]="!selectedPreSavedQuestion"
+              (click)="addPreSavedSelectedQuestion()">
+          Add reused question
+        </button>
+      </div>
+
+      <div class="col-lg-12 col-md-12 col-sm-12 mt-3">
+
+        <h3>{{ quiz ? "Edit quiz" : "Add new quiz" }}</h3>
+
+        <label class="form-label mt-4">Title:</label>
+        <input
+          class="form-control"
+          formControlName="name"
+          placeholder="Enter title"
+        />
+        <div
+          class="text-danger mb-4"
+          *ngIf="f.name.touched && f.name.errors?.['required']"
+        >
+          Quiz title is required
+        </div>
+
+        <p>Questions:</p>
+        <div formArrayName="questions">
+          <div *ngFor="let question of questions.controls; let i = index">
+            <div class="mb-2" [formGroupName]="i">
+              <span>{{ i + 1 }}. </span>
+              <label class="form-label">Question:</label><br />
+              <input
+                class="form-control"
+                formControlName="question"
+                placeholder="Enter question"
+              />
+              <div
+                class="text-danger"
+                *ngIf="
+                  question.get('question')!.errors &&
+                  question.get('question')!.touched
+                "
+              >
+                Question is required
+              </div>
+              <br />
+              <span>{{ i + 1 }}. </span>
+              <label class="form-label">Answer:</label><br />
+              <input
+                class="form-control"
+                formControlName="answer"
+                placeholder="Enter Answer"
+              />
+              <div
+                class="text-danger"
+                *ngIf="
+                  question.get('answer')!.errors &&
+                  question.get('answer')!.touched
+                "
+              >
+                Answer is required
+              </div>
+              <br />
+              <button
+                type="button"
+                class="btn btn-danger mb-4"
+                (click)="removeQuestion(i)"
+              >
+                Remove {{ i + 1 }}. question
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        <button
+          *ngIf="!quiz"
+          type="submit"
+          [disabled]="quizForm.invalid || questions.controls.length < 1"
+          class="btn btn-primary mb-4 float-end"
+        >
+          Submit quiz
+        </button>
+
+        <button
+          *ngIf="quiz"
+          type="submit"
+          [disabled]="quizForm.invalid || questions.controls.length < 1"
+          class="btn btn-primary mb-4 float-end"
+        >
+          Submit edited quiz
+        </button>
+      </div>
+    </div>
+  </div>
+</form>
